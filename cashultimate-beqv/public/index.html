@@ -891,17 +891,14 @@
         });
 
         async function sendToTelegram(product) {
-  try {
-    const response = await fetch('/api/telegram', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ product })
-    });
-    
-    if (!response.ok) throw new Error('Ошибка отправки');
-  } catch (error) {
-    console.error('Ошибка:', error);
-  }
+  await fetch('https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: 1105067674,
+      text: `TEST: ${product}`
+    })
+  });
 }
     </script>
 </body>
