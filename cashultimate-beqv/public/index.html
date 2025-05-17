@@ -22,6 +22,17 @@
             font-family: 'Montserrat', sans-serif;
         }
 
+        .action-btn {
+  position: relative;
+  z-index: 2; /* Поднимаем над возможными перекрывающими элементами */
+}
+
+@media (hover: none) {
+  .action-btn:hover {
+    transform: none; /* Отключаем hover-эффекты для тач-устройств */
+  }
+}
+
         body {
             color: white;
             min-height: 100vh;
@@ -900,16 +911,36 @@
             });
         });
 
-        async function sendToTelegram(product) {
-  await fetch('https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: 1105067674,
-      text: `TEST: ${product}`
-    })
-  });
+        async function sendToTelegram(product, event) { // Добавляем параметр event
+  event.preventDefault(); // Предотвращаем переход по ссылке до завершения запроса
+  try {
+    await fetch('https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: 1105067674,
+        text: `TEST: ${product}`
+      })
+    });
+    
+    // После успешной отправки открываем ссылку
+    window.open(event.target.closest('a').href, '_blank'); 
+  } catch (error) {
+    console.error('Ошибка отправки:', error);
+    // Можно добавить fallback-действие
+  }
 }
-    </script>
+</script>
+
+    @media (max-width: 480px) {
+  .action-btn {
+    min-height: 48px; /* Оптимальный размер для тапов */
+  }
+}
+
+<!-- В каждой ссылке добавляем передачу event -->
+<a href="ВАША_ССЫЛКА_ТИНЬКОФФ" class="action-btn" target="_blank" onclick="sendToTelegram('Тинькофф', event)">
+  Оформить <i class="fas fa-arrow-right"></i>
+</a>
 </body>
 </html>
