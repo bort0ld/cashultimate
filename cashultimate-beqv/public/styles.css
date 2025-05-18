@@ -31,6 +31,17 @@ a.action-btn::after {
     -webkit-tap-highlight-color: transparent;
 }
 
+.action-btn {
+    position: relative;
+    z-index: 1000 !important; /* Перекрывает все элементы */
+    pointer-events: all !important;
+}
+
+.product-card {
+    position: relative;
+    z-index: 1001; /* Выше фона */
+}
+
 /* Отключаем стандартное поведение ссылок */
 a.action-btn:hover::after,
 a.action-btn:focus::after {
