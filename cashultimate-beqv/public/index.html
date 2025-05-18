@@ -306,27 +306,6 @@
             }
             
         }
-
-        .action-btn {
-        /* Убираем все стандартные стили кнопки */
-        -webkit-tap-highlight-color: transparent;
-        user-select: none;
-        -webkit-user-select: none;
-        touch-action: manipulation;
-    }
-
-    /* Отключаем подсветку на мобильных */
-    @media (hover: none) {
-        .action-btn:hover {
-            transform: none !important;
-        }
-    }
-
-    /* Скрываем tooltip для ссылок */
-    [data-href] {
-        cursor: pointer !important;
-        text-decoration: none !important;
-    }
         
     </style>
 </head>
@@ -883,47 +862,50 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-        // Обработчик для всех кнопок
-        document.querySelectorAll('.action-btn').forEach(btn => {
-            // Сохраняем оригинальный цвет
-            const originalBg = btn.style.background;
-            
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Анимация нажатия
-                this.style.background = 'var(--neon-purple)';
-                setTimeout(() => {
-                    this.style.background = originalBg;
-                }, 200);
-
-                // Получаем данные
-                const productName = this.dataset.product;
-                const url = this.dataset.href;
-
-                // Отправка в Telegram
-                fetch(`https://api.telegram.org/botYOUR_TOKEN/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: "YOUR_CHAT_ID",
-                        text: `Заявка: ${productName}`
-                    })
-                }).catch(() => {});
-
-                // Открытие ссылки
-                const newWindow = window.open('', '_blank');
-                newWindow.opener = null;
-                newWindow.location = url;
+            const video = document.getElementById('video-bg');
+            video.play().catch(() => {
+                video.muted = true;
+                video.play();
             });
 
-            // Запрет контекстного меню
-            btn.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                return false;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.classList.contains('age-btn')) {
+                        document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                    } else {
+                        document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+
+                    const age = document.querySelector('.age-btn.active').dataset.age;
+                    const section = document.querySelector('.section-btn.active').dataset.section;
+
+                    document.querySelectorAll('.products-container').forEach(el => el.classList.remove('active'));
+                    const activeSection = document.getElementById(`${section}-${age}`);
+                    if (activeSection) activeSection.classList.add('active');
+                });
+            });
+
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const productName = this.closest('.product-card').querySelector('.product-name').textContent;
+                    const url = this.href;
+
+                    fetch(`https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: "1105067674",
+                            text: `Новая заявка: ${productName}`
+                        })
+                    }).catch(() => {});
+
+                    window.open(url, '_blank');
+                });
             });
         });
-    });
     </script>
 </body>
 </html>
