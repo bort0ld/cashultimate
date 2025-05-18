@@ -26,6 +26,11 @@ a.action-btn::after {
     filter: hue-rotate(180deg);
 }
 
+.action-btn {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
 /* Отключаем стандартное поведение ссылок */
 a.action-btn:hover::after,
 a.action-btn:focus::after {
