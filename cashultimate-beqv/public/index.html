@@ -116,8 +116,14 @@
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 15px;
             margin-bottom: 40px;
+            align-items: center;
+            gap: 12px; /* Уменьшаем расстояние между кнопками */
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            margin: 0 auto 30px;
+            max-width: fit-content;
         }
 
         .filter-btn {
@@ -170,7 +176,7 @@
         }
 
         .section-btn {
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 8px;
             border: 2px solid;
             color: white;
@@ -181,12 +187,15 @@
             gap: 8px;
             font-weight: 600;
             backdrop-filter: blur(5px);
+            line-height: 1.2;
         }
 
         .section-btn.debit-btn {
             background: linear-gradient(45deg, var(--neon-blue), #00c4ff);
             border-color: transparent;
             color: black;
+            align-items: center;
+            padding-top: 13px;
         }
 
         .section-btn.credit-btn {
@@ -214,10 +223,20 @@
         .products-container {
             display: none;
             animation: fadeIn 0.5s ease;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            height: 0;
+            overflow: hidden;
+
         }
 
         .products-container.active {
             display: block;
+            opacity: 1;
+            visibility: visible;
+            height: auto;
+            animation: fadeIn 0.5s ease;
         }
 
         .products-grid {
@@ -236,6 +255,15 @@
             position: relative;
             overflow: hidden;
             transform-style: preserve-3d;
+        }
+
+        header h1 {
+            margin-bottom: 8px; /* Уменьшаем отступ снизу */
+        }
+
+        header p {
+            margin-bottom: 30px; /* Увеличиваем отступ под текстом */
+            font-size: 1.1rem;
         }
 
         .product-card::before,
