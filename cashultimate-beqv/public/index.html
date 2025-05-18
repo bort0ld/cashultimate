@@ -543,7 +543,34 @@
                     <img src="https://my-cache.s3-cdn.com/offers/thumbs/7/103229.png" class="product-logo">
                     <h3 class="product-name">ВТБ Платежный стикер</h3>
                     <div class="product-payout">500 ₽</div>
-                    <p class="product-description">Мультикарта • Кэшбэк у партнеров</p>
+                    <p class="product-description">Как получить стикер:
+Оформить онлайн-заявку
+Выбрать способ получения: бесплатная доставка сотрудником банка в удобное время и любое место, либо выдача в отделении Банка
+Обслуживание – бесплатно при совершении покупок на сумму более 10 000 руб. в месяц.
+При невыполнении условий – 49 руб. в месяц.
+Выпуск стикера – бесплатно до 31.12.2024
+Бесплатная доставка курьером
+До 20% по накопительному ВТБ-счету
+
+Кешбэк 2% за покупки в категориях:
+Супермаркеты
+Рестораны и кафе
+Такси и городской транспорт
+Кешбэк до 50% рублями от партнеров банка
+
+Условия бонусной программы:
+Кешбэк рублями до 25% в выбранных категориях. Для выбора клиентам доступно 3 категории кешбэка из 8 возможных, зарплатным клиентам — 4 категории. Максимум кешбэка — 3 000₽ в месяц
+Специальные категории кешбэка для клиентов со сбережениями от 50 000₽
+
+Дополнительные преимущества:
+Бесплатные переводы по номеру телефона в другие банки
+Оплата ЖКХ, штрафов, интернета, сотовой связи без комиссии
+Снятие наличных и переводы:
+Без комиссии в банкоматах ВТБ
+Лимит снятия – 100 000₽ в день, 600 000₽ в месяц
+Лимит бесплатных переводов по номеру телефона – 100 000₽ в месяц
+Переводы клиентам ВТБ – без комиссии
+</p>
                     <a href="https://clck.ru/3M8qVD" class="action-btn" target="_blank" onclick="sendToTelegram('ВТБ Платежный стикер')">
                         Оформить <i class="fas fa-arrow-right"></i>
                     </a>
@@ -1018,127 +1045,61 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const video = document.getElementById('video-bg');
-            video.play().catch(() => {
-                video.muted = true;
-                video.play();
-            });
-
-            // Обработчики для возрастных кнопок
-            document.querySelectorAll('.age-btn').forEach(b => {
-                b.addEventListener('click', function() {
-                    const age = this.dataset.age;
-                    document.querySelectorAll('.age-btn').forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-
-                    if(age === '14') {
-                        document.querySelectorAll('.section-btn').forEach(btn => {
-                            if(btn.dataset.section !== 'debit') {
-                                btn.style.display = 'none';
-                                btn.classList.remove('active');
-                            }
-                        });
-                        document.querySelector('.section-btn[data-section="debit"]').click();
-                    } else {
-                        document.querySelectorAll('.section-btn').forEach(btn => {
-                            btn.style.display = 'flex';
-                            btn.style.opacity = '1';
-                        });
-                    }
-
-                    const activeSection = age === '14' ? 'debit' : 
-                        document.querySelector('.section-btn.active')?.dataset.section || 'debit';
-                    
-                    document.querySelectorAll('.products-container').forEach(el => el.classList.remove('active'));
-                    
-                    if(age === '14') {
-                        document.getElementById('debit-14').classList.add('active');
-                        document.querySelectorAll('.section-btn:not([data-section="debit"])').forEach(btn => {
-                            btn.style.opacity = '0.5';
-                        });
-                    } else {
-                        document.getElementById(`${activeSection}-18`).classList.add('active');
-                        document.querySelectorAll('.section-btn').forEach(btn => {
-                            btn.style.opacity = '1';
-                        });
-                    }
-                });
-            });
-
-            // Обработчики для кнопок секций
-            document.querySelectorAll('.section-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    const age = document.querySelector('.age-btn.active').dataset.age;
-                    const section = this.dataset.section;
-                    
-                    document.querySelectorAll('.products-container').forEach(el => el.classList.remove('active'));
-                    document.getElementById(`${section}-${age}`).classList.add('active');
-                });
-            });
-
-            // Обработчики для кнопок продуктов
-            document.querySelectorAll('.action-btn').forEach(btn => {
-                let originalHref = btn.href;
-                
-                btn.addEventListener('mouseenter', () => btn.removeAttribute('href'));
-                btn.addEventListener('mouseleave', () => btn.href = originalHref);
-                
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Анимация
-                    this.style.transform = 'scale(0.95)';
-                    setTimeout(() => this.style.transform = '', 200);
-                    
-                    // Отправка в Telegram
-                    const productName = this.closest('.product-card').querySelector('.product-name').textContent;
-                    fetch(`https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chat_id: "1105067674",
-                            text: `🔥 Новая заявка: ${productName}`
-                        })
-                    });
-                    
-                    // Открытие ссылки
-                    const newWindow = window.open(originalHref, '_blank');
-                    if(newWindow) newWindow.opener = null;
-                });
-                
-                // Блокировка контекстного меню
-                btn.addEventListener('contextmenu', (e) => e.preventDefault());
-                
-                // Обработка касаний для мобильных
-                btn.addEventListener('touchstart', () => btn.removeAttribute('href'), { passive: true });
-                btn.addEventListener('touchend', () => btn.href = originalHref, { passive: true });
-            });
-
-            // Инициализация
-            document.querySelector('.age-btn.active').click();
+    document.addEventListener('DOMContentLoaded', () => {
+        const video = document.getElementById('video-bg');
+        video.play().catch(() => {
+            video.muted = true;
+            video.play();
         });
+
+        let currentSection = 'debit';
+        let currentAge = '14';
+        let searchQuery = '';
+
+        // Инициализация при загрузке
+        function init() {
+            document.querySelector('.age-btn.active').click();
+            updateProductsDisplay();
+        }
+
+        // Обновление отображения продуктов
+        function updateProductsDisplay() {
+            const allProducts = document.querySelectorAll('.product-card');
+            const activeContainers = currentSection === 'all' 
+                ? document.querySelectorAll('.products-container') 
+                : [document.getElementById(`${currentSection}-${currentAge}`)];
+
+            let hasVisibleItems = false;
+
+            allProducts.forEach(card => {
+                const container = card.closest('.products-container');
+                const isVisibleContainer = Array.from(activeContainers).includes(container);
+                const matchesSearch = card.querySelector('.product-name').textContent
+                    .toLowerCase().includes(searchQuery.toLowerCase());
+
+                if (isVisibleContainer && matchesSearch) {
+                    card.style.display = 'block';
+                    container.classList.add('active');
+                    hasVisibleItems = true;
+                } else {
+                    card.style.display = 'none';
+                    if (currentSection !== 'all') container.classList.remove('active');
+                }
+
+                container.style.display = isVisibleContainer ? 'block' : 'none';
+            });
+
+            document.querySelector('.no-results').style.display = 
+                hasVisibleItems ? 'none' : 'block';
+        }
+
+        // Обработчик поиска
         const searchProducts = debounce((searchText) => {
+            searchQuery = searchText;
             document.querySelector('.loader').style.display = 'block';
             
             setTimeout(() => {
-                const activeContainer = document.querySelector('.products-container.active');
-                const cards = activeContainer.querySelectorAll('.product-card');
-                let found = false;
-
-                cards.forEach(card => {
-                    const name = card.querySelector('.product-name').textContent.toLowerCase();
-                    if(name.includes(searchText.toLowerCase())) {
-                        card.style.display = 'block';
-                        found = true;
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-
-                document.querySelector('.no-results').style.display = found ? 'none' : 'block';
+                updateProductsDisplay();
                 document.querySelector('.loader').style.display = 'none';
             }, 300);
         }, 300);
@@ -1147,7 +1108,44 @@
             searchProducts(e.target.value);
         });
 
-        function debounce(func, timeout = 300){
+        // Обработчики кнопок
+        document.querySelectorAll('.age-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                currentAge = this.dataset.age;
+                document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                if (currentAge === '14') {
+                    document.querySelectorAll('.section-btn').forEach(btn => {
+                        if(btn.dataset.section !== 'debit') {
+                            btn.style.display = 'none';
+                            btn.classList.remove('active');
+                        }
+                    });
+                    currentSection = 'debit';
+                    document.querySelector('.section-btn[data-section="debit"]').click();
+                } else {
+                    document.querySelectorAll('.section-btn').forEach(btn => {
+                        btn.style.display = 'flex';
+                        btn.style.opacity = '1';
+                    });
+                }
+                
+                updateProductsDisplay();
+            });
+        });
+
+        document.querySelectorAll('.section-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                currentSection = this.dataset.section;
+                document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                updateProductsDisplay();
+            });
+        });
+
+        // Дебаунс для поиска
+        function debounce(func, timeout = 300) {
             let timer;
             return (...args) => {
                 clearTimeout(timer);
@@ -1155,26 +1153,59 @@
             };
         }
 
-        // Дополнительные улучшения
-        document.querySelectorAll('.product-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = 'rotateZ(1deg) scale(1.02)';
+        // Обработчики кнопок продуктов
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            let originalHref = btn.href;
+            
+            // Ховер-эффекты
+            btn.addEventListener('mouseenter', () => btn.removeAttribute('href'));
+            btn.addEventListener('mouseleave', () => btn.href = originalHref);
+            
+            // Клик
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Анимация
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => this.style.transform = '', 200);
+                
+                // Отправка в Telegram
+                const productName = this.closest('.product-card').querySelector('.product-name').textContent;
+                fetch(`https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: "1105067674",
+                        text: `🔥 Новая заявка: ${productName}`
+                    })
+                });
+                
+                // Открытие ссылки
+                const newWindow = window.open(originalHref, '_blank');
+                if(newWindow) newWindow.opener = null;
             });
             
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'rotateZ(0deg) scale(1)';
-            });
+            // Контекстное меню
+            btn.addEventListener('contextmenu', (e) => e.preventDefault());
+            
+            // Мобильные касания
+            btn.addEventListener('touchstart', () => btn.removeAttribute('href'), { passive: true });
+            btn.addEventListener('touchend', () => btn.href = originalHref, { passive: true });
         });
+
+        // Запуск инициализации
+        init();
 
         // Плавный скролл
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
                 });
             });
         });
-    </script>
+    });
+</script>
 </body>
 </html>
