@@ -60,7 +60,6 @@
             z-index: 2;
         }
 
-        /* Анимация появления */
         @keyframes slideIn {
             0% { opacity: 0; transform: translateY(50px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -88,12 +87,12 @@
             object-fit: cover;
             border: 3px solid var(--neon-blue);
             box-shadow: 0 0 30px var(--neon-blue);
-            transition: all 0.5s;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             filter: drop-shadow(0 0 10px var(--neon-blue));
         }
 
         .avatar:hover {
-            transform: rotateY(20deg) scale(1.05) rotateZ(5deg);
+            transform: rotateY(20deg) scale(1.05);
             filter: drop-shadow(0 0 20px var(--neon-purple));
         }
 
@@ -126,7 +125,7 @@
             border-radius: 30px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 2px solid;
             background: transparent;
             font-size: 0.95rem;
@@ -176,7 +175,7 @@
             border: 2px solid;
             color: white;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -232,7 +231,7 @@
             border-radius: 20px;
             padding: 25px;
             border: 1px solid #2a2a3a;
-            transition: all 0.4s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(8px);
             position: relative;
             overflow: hidden;
@@ -249,10 +248,7 @@
 
         .product-card::before {
             inset: -1px;
-            background: linear-gradient(45deg, 
-                var(--neon-blue),
-                var(--neon-purple),
-                transparent 60%);
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple), transparent 60%);
             z-index: -1;
             opacity: 0;
             transition: opacity 0.3s;
@@ -260,14 +256,11 @@
 
         .product-card::after {
             inset: 0;
-            background: radial-gradient(circle at 50% 50%, 
-                rgba(0, 242, 255, 0.1), 
-                transparent 60%);
+            background: radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.1), transparent 60%);
         }
 
         .product-card:hover {
-            transform: translateY(-10px) rotateX(5deg) rotateY(5deg);
-            border-color: var(--neon-blue);
+            transform: translateY(-10px);
             box-shadow: 0 20px 40px rgba(0, 242, 255, 0.2);
         }
 
@@ -284,7 +277,7 @@
             padding: 8px;
             margin-bottom: 20px;
             box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
-            transition: transform 0.3s;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .product-card:hover .product-logo {
@@ -325,7 +318,7 @@
             color: black;
             border-radius: 12px;
             font-weight: 700;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             border: none;
             width: 100%;
@@ -333,6 +326,8 @@
             position: relative;
             overflow: hidden;
             z-index: 1;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         .action-btn::before {
@@ -342,12 +337,7 @@
             left: -100%;
             width: 200%;
             height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255,255,255,0.3),
-                transparent
-            );
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             transition: 0.5s;
         }
 
@@ -360,7 +350,6 @@
             box-shadow: 0 5px 20px rgba(0, 242, 255, 0.4);
         }
 
-        /* Адаптивка */
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.2rem;
@@ -931,93 +920,183 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const video = document.getElementById('video-bg');
-            video.play().catch(() => {
-                video.muted = true;
-                video.play();
-            });
 
-            // Обновленный обработчик фильтров
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const isAgeBtn = this.classList.contains('age-btn');
-                    const age = isAgeBtn ? this.dataset.age : document.querySelector('.age-btn.active').dataset.age;
-                    const section = isAgeBtn ? 
-                        (age === '14' ? 'debit' : document.querySelector('.section-btn.active').dataset.section) 
-                        : this.dataset.section;
+document.addEventListener('DOMContentLoaded', () => {
 
-                    // Обновление активных кнопок
-                    if(isAgeBtn) {
-                        document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                        
-                        if(age === '14') {
-                            document.querySelectorAll('.section-btn').forEach(b => {
-                                if(b.dataset.section !== 'debit') {
-                                    b.style.display = 'none';
-                                    b.classList.remove('active');
-                                }
-                            });
-                            document.querySelector('.section-btn[data-section="debit"]').click();
-                        } else {
-                            document.querySelectorAll('.section-btn').forEach(b => b.style.display = 'flex');
-                        }
-                    } else {
-                        document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                    }
+const video = document.getElementById('video-bg');
 
-                    // Показ/скрытие секций
-                    document.querySelectorAll('.products-container').forEach(el => el.classList.remove('active'));
-                    
-                    const activeAge = document.querySelector('.age-btn.active').dataset.age;
-                    const activeSection = document.querySelector('.section-btn.active').dataset.section;
-                    
-                    if(activeAge === '14') {
-                        document.getElementById(`debit-14`).classList.add('active');
-                        document.querySelectorAll('.section-btn:not([data-section="debit"])').forEach(b => b.style.opacity = '0.5');
-                    } else {
-                        document.getElementById(`${activeSection}-18`).classList.add('active');
-                        document.querySelectorAll('.section-btn').forEach(b => b.style.opacity = '1');
-                    }
-                });
-            });
+video.play().catch(() => {
 
-            // Обработчик для кнопок
-            document.querySelectorAll('.action-btn').forEach(btn => {
-                let originalHref = btn.href;
-                
-                btn.addEventListener('mouseenter', () => btn.removeAttribute('href'));
-                btn.addEventListener('mouseleave', () => btn.href = originalHref);
+video.muted = true;
 
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Анимация
-                    this.style.transform = 'scale(0.95)';
-                    setTimeout(() => this.style.transform = '', 200);
+video.play();
 
-                    // Отправка в Telegram
-                    const productName = this.closest('.product-card').querySelector('.product-name').textContent;
-                    fetch(`https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chat_id: "1105067674",
-                            text: `🔥 Новая заявка: ${productName}`
-                        })
-                    });
+});
 
-                    // Открытие ссылки
-                    const newWindow = window.open(originalHref, '_blank');
-                    newWindow.opener = null;
-                });
+// Инициализация при загрузке
 
-                // Блокировка контекстного меню
-                btn.addEventListener('contextmenu', (e) => e.preventDefault());
-            });
-        });
-    </script>
+const initialize = () => {
+
+document.querySelectorAll('.section-btn:not([data-section="debit"])').forEach(b => {
+
+b.style.display = 'none';
+
+b.classList.remove('active');
+
+});
+
+document.getElementById('debit-14').classList.add('active');
+
+document.querySelectorAll('.products-container:not(#debit-14)').forEach(el => el.classList.remove('active'));
+
+};
+
+initialize();
+
+// Обработчик фильтров
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+
+btn.addEventListener('click', function() {
+
+const isAgeBtn = this.classList.contains('age-btn');
+
+const age = isAgeBtn ? this.dataset.age : document.querySelector('.age-btn.active').dataset.age;
+
+if(isAgeBtn) {
+
+document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+
+this.classList.add('active');
+
+if(age === '14') {
+
+document.querySelectorAll('.section-btn').forEach(b => {
+
+if(b.dataset.section !== 'debit') {
+
+b.style.display = 'none';
+
+b.classList.remove('active');
+
+}
+
+});
+
+document.querySelector('.section-btn[data-section="debit"]').click();
+
+} else {
+
+document.querySelectorAll('.section-btn').forEach(b => {
+
+b.style.display = 'flex';
+
+b.style.opacity = '1';
+
+});
+
+}
+
+}
+
+const section = isAgeBtn ?
+
+(age === '14' ? 'debit' : document.querySelector('.section-btn.active')?.dataset.section || 'debit')
+
+: this.dataset.section;
+
+document.querySelectorAll('.products-container').forEach(el => el.classList.remove('active'));
+
+if(age === '14') {
+
+document.getElementById(`debit-14`).classList.add('active');
+
+document.querySelectorAll('.section-btn:not([data-section="debit"])').forEach(b => b.style.opacity = '0.5');
+
+} else {
+
+document.getElementById(`${section}-18`).classList.add('active');
+
+document.querySelectorAll('.section-btn').forEach(b => b.style.opacity = '1');
+
+}
+
+});
+
+});
+
+// Обработчик для кнопок
+
+document.querySelectorAll('.action-btn').forEach(btn => {
+
+let originalHref = btn.href;
+
+btn.addEventListener('mouseenter', () => btn.removeAttribute('href'));
+
+btn.addEventListener('mouseleave', () => btn.href = originalHref);
+
+btn.addEventListener('click', function(e) {
+
+e.preventDefault();
+
+// Анимация
+
+this.style.transform = 'scale(0.95)';
+
+setTimeout(() => this.style.transform = '', 200);
+
+// Отправка в Telegram
+
+const productName = this.closest('.product-card').querySelector('.product-name').textContent;
+
+fetch(`https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage`, {
+
+method: 'POST',
+
+headers: { 'Content-Type': 'application/json' },
+
+body: JSON.stringify({
+
+chat_id: "1105067674",
+
+text: `🔥 Новая заявка: ${productName}`
+
+})
+
+});
+
+// Открытие ссылки
+
+const newWindow = window.open(originalHref, '_blank');
+
+newWindow.opener = null;
+
+});
+
+// Блокировка контекстного меню
+
+btn.addEventListener('contextmenu', (e) => e.preventDefault());
+
+// Обработка касаний для мобильных
+
+btn.addEventListener('touchstart', () => {
+
+btn.removeAttribute('href');
+
+}, { passive: true });
+
+btn.addEventListener('touchend', () => {
+
+btn.href = originalHref;
+
+}, { passive: true });
+
+});
+
+});
+
+</script>
+
 </body>
+
 </html>
