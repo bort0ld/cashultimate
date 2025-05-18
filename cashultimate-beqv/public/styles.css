@@ -28,14 +28,19 @@ a.action-btn::after {
 
 .action-btn {
     position: relative;
-    z-index: 9999 !important;
-    pointer-events: auto !important;
+    z-index: 9999;
     cursor: pointer !important;
+    pointer-events: auto !important;
+    text-decoration: none !important;
 }
 
 .product-card {
     position: relative;
     z-index: 1;
+}
+
+#video-bg {
+    z-index: -1 !important;
 }
 
 /* Отключаем стандартное поведение ссылок */
