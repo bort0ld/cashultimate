@@ -271,6 +271,9 @@
             cursor: pointer;
             position: relative;
             z-index: 9999;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .action-btn:hover {
@@ -304,9 +307,7 @@
             .products-grid {
                 grid-template-columns: 1fr;
             }
-            
         }
-        
     </style>
 </head>
 <body>
@@ -868,6 +869,7 @@
                 video.play();
             });
 
+            // Обработчики фильтров
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     if (this.classList.contains('age-btn')) {
@@ -887,12 +889,32 @@
                 });
             });
 
+            // Обработчики для кнопок
             document.querySelectorAll('.action-btn').forEach(btn => {
+                let originalHref = btn.href;
+                
+                // Скрываем href при наведении
+                btn.addEventListener('mouseenter', () => {
+                    btn.removeAttribute('href');
+                });
+                
+                // Восстанавливаем href
+                btn.addEventListener('mouseleave', () => {
+                    btn.href = originalHref;
+                });
+
+                // Обработка клика
                 btn.addEventListener('click', function(e) {
                     e.preventDefault();
                     const productName = this.closest('.product-card').querySelector('.product-name').textContent;
-                    const url = this.href;
+                    
+                    // Анимация нажатия
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
 
+                    // Отправка в Telegram
                     fetch(`https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -902,8 +924,25 @@
                         })
                     }).catch(() => {});
 
-                    window.open(url, '_blank');
+                    // Открытие ссылки
+                    const newWindow = window.open(originalHref, '_blank');
+                    if (newWindow) newWindow.opener = null;
                 });
+
+                // Блокировка контекстного меню
+                btn.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    return false;
+                });
+
+                // Для мобильных устройств
+                btn.addEventListener('touchstart', () => {
+                    btn.removeAttribute('href');
+                }, { passive: true });
+
+                btn.addEventListener('touchend', () => {
+                    btn.href = originalHref;
+                }, { passive: true });
             });
         });
     </script>
