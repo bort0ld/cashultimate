@@ -904,33 +904,29 @@
         });
 
         async function sendToTelegram(product, event) {
-    event.preventDefault(); // Блокируем переход сразу
-    
-    try {
-        // Ваши реальные данные бота
-        const BOT_TOKEN = "7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk";
-        const CHAT_ID = "1105067674";
+        try {
+            const BOT_TOKEN = "7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk";
+            const CHAT_ID = "1105067674";
 
-        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: `Новая заявка: ${product}`
-            })
-        });
+            // Отправляем запрос НЕ блокируя интерфейс
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: `Заявка: ${product}`
+                })
+            });
 
-        if (!response.ok) throw new Error("Ошибка Telegram API");
-        
-        // Открываем ссылку только после успешной отправки
-        window.open(event.target.closest('a').href, '_blank');
-        
-    } catch (error) {
-        console.error('Ошибка:', error);
-        // Открываем ссылку даже при ошибке
-        window.open(event.target.closest('a').href, '_blank');
+            // Открываем ссылку сразу
+            const link = event.currentTarget.href;
+            window.open(link, '_blank');
+            
+        } catch (error) {
+            console.error('Ошибка:', error);
+            window.open(event.currentTarget.href, '_blank');
+        }
     }
-}
 
         document.querySelectorAll('.action-btn').forEach(btn => {
   btn.addEventListener('mouseover', function() {
