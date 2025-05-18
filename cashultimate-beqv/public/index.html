@@ -124,6 +124,7 @@
             border-radius: 20px;
             margin: 0 auto 30px;
             max-width: fit-content;
+            max-width: fit-content;
         }
 
         .filter-btn {
@@ -948,183 +949,108 @@
     </div>
 
     <script>
-
-document.addEventListener('DOMContentLoaded', () => {
-
-const video = document.getElementById('video-bg');
-
-video.play().catch(() => {
-
-video.muted = true;
-
-video.play();
-
-});
-
-// Инициализация при загрузке
-
-const initialize = () => {
-
-document.querySelectorAll('.section-btn:not([data-section="debit"])').forEach(b => {
-
-b.style.display = 'none';
-
-b.classList.remove('active');
-
-});
-
-document.getElementById('debit-14').classList.add('active');
-
-document.querySelectorAll('.products-container:not(#debit-14)').forEach(el => el.classList.remove('active'));
-
-};
-
-initialize();
-
-// Обработчик фильтров
-
-document.querySelectorAll('.filter-btn').forEach(btn => {
-
-btn.addEventListener('click', function() {
-
-const isAgeBtn = this.classList.contains('age-btn');
-
-const age = isAgeBtn ? this.dataset.age : document.querySelector('.age-btn.active').dataset.age;
-
-if(isAgeBtn) {
-
-document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
-
-this.classList.add('active');
-
-if(age === '14') {
-
-document.querySelectorAll('.section-btn').forEach(b => {
-
-if(b.dataset.section !== 'debit') {
-
-b.style.display = 'none';
-
-b.classList.remove('active');
-
-}
-
-});
-
-document.querySelector('.section-btn[data-section="debit"]').click();
-
-} else {
-
-document.querySelectorAll('.section-btn').forEach(b => {
-
-b.style.display = 'flex';
-
-b.style.opacity = '1';
-
-});
-
-}
-
-}
-
-const section = isAgeBtn ?
-
-(age === '14' ? 'debit' : document.querySelector('.section-btn.active')?.dataset.section || 'debit')
-
-: this.dataset.section;
-
-document.querySelectorAll('.products-container').forEach(el => el.classList.remove('active'));
-
-if(age === '14') {
-
-document.getElementById(`debit-14`).classList.add('active');
-
-document.querySelectorAll('.section-btn:not([data-section="debit"])').forEach(b => b.style.opacity = '0.5');
-
-} else {
-
-document.getElementById(`${section}-18`).classList.add('active');
-
-document.querySelectorAll('.section-btn').forEach(b => b.style.opacity = '1');
-
-}
-
-});
-
-});
-
-// Обработчик для кнопок
-
-document.querySelectorAll('.action-btn').forEach(btn => {
-
-let originalHref = btn.href;
-
-btn.addEventListener('mouseenter', () => btn.removeAttribute('href'));
-
-btn.addEventListener('mouseleave', () => btn.href = originalHref);
-
-btn.addEventListener('click', function(e) {
-
-e.preventDefault();
-
-// Анимация
-
-this.style.transform = 'scale(0.95)';
-
-setTimeout(() => this.style.transform = '', 200);
-
-// Отправка в Telegram
-
-const productName = this.closest('.product-card').querySelector('.product-name').textContent;
-
-fetch(`https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage`, {
-
-method: 'POST',
-
-headers: { 'Content-Type': 'application/json' },
-
-body: JSON.stringify({
-
-chat_id: "1105067674",
-
-text: `🔥 Новая заявка: ${productName}`
-
-})
-
-});
-
-// Открытие ссылки
-
-const newWindow = window.open(originalHref, '_blank');
-
-newWindow.opener = null;
-
-});
-
-// Блокировка контекстного меню
-
-btn.addEventListener('contextmenu', (e) => e.preventDefault());
-
-// Обработка касаний для мобильных
-
-btn.addEventListener('touchstart', () => {
-
-btn.removeAttribute('href');
-
-}, { passive: true });
-
-btn.addEventListener('touchend', () => {
-
-btn.href = originalHref;
-
-}, { passive: true });
-
-});
-
-});
-
-</script>
-
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('video-bg');
+            video.play().catch(() => {
+                video.muted = true;
+                video.play();
+            });
+
+            // Обработчики для возрастных кнопок
+            document.querySelectorAll('.age-btn').forEach(b => {
+                b.addEventListener('click', function() {
+                    const age = this.dataset.age;
+                    document.querySelectorAll('.age-btn').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+
+                    if(age === '14') {
+                        document.querySelectorAll('.section-btn').forEach(btn => {
+                            if(btn.dataset.section !== 'debit') {
+                                btn.style.display = 'none';
+                                btn.classList.remove('active');
+                            }
+                        });
+                        document.querySelector('.section-btn[data-section="debit"]').click();
+                    } else {
+                        document.querySelectorAll('.section-btn').forEach(btn => {
+                            btn.style.display = 'flex';
+                            btn.style.opacity = '1';
+                        });
+                    }
+
+                    const activeSection = age === '14' ? 'debit' : 
+                        document.querySelector('.section-btn.active')?.dataset.section || 'debit';
+                    
+                    document.querySelectorAll('.products-container').forEach(el => el.classList.remove('active'));
+                    
+                    if(age === '14') {
+                        document.getElementById('debit-14').classList.add('active');
+                        document.querySelectorAll('.section-btn:not([data-section="debit"])').forEach(btn => {
+                            btn.style.opacity = '0.5';
+                        });
+                    } else {
+                        document.getElementById(`${activeSection}-18`).classList.add('active');
+                        document.querySelectorAll('.section-btn').forEach(btn => {
+                            btn.style.opacity = '1';
+                        });
+                    }
+                });
+            });
+
+            // Обработчики для кнопок секций
+            document.querySelectorAll('.section-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const age = document.querySelector('.age-btn.active').dataset.age;
+                    const section = this.dataset.section;
+                    
+                    document.querySelectorAll('.products-container').forEach(el => el.classList.remove('active'));
+                    document.getElementById(`${section}-${age}`).classList.add('active');
+                });
+            });
+
+            // Обработчики для кнопок продуктов
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                let originalHref = btn.href;
+                
+                btn.addEventListener('mouseenter', () => btn.removeAttribute('href'));
+                btn.addEventListener('mouseleave', () => btn.href = originalHref);
+                
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Анимация
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => this.style.transform = '', 200);
+                    
+                    // Отправка в Telegram
+                    const productName = this.closest('.product-card').querySelector('.product-name').textContent;
+                    fetch(`https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: "1105067674",
+                            text: `🔥 Новая заявка: ${productName}`
+                        })
+                    });
+                    
+                    // Открытие ссылки
+                    const newWindow = window.open(originalHref, '_blank');
+                    if(newWindow) newWindow.opener = null;
+                });
+                
+                // Блокировка контекстного меню
+                btn.addEventListener('contextmenu', (e) => e.preventDefault());
+                
+                // Обработка касаний для мобильных
+                btn.addEventListener('touchstart', () => btn.removeAttribute('href'), { passive: true });
+                btn.addEventListener('touchend', () => btn.href = originalHref, { passive: true });
+            });
+
+            // Инициализация
+            document.querySelector('.age-btn.active').click();
+        });
+    </script>
 </body>
-
 </html>
