@@ -22,17 +22,6 @@
             font-family: 'Montserrat', sans-serif;
         }
 
-        .action-btn {
-  position: relative;
-  z-index: 2; /* Поднимаем над возможными перекрывающими элементами */
-}
-
-@media (hover: none) {
-  .action-btn:hover {
-    transform: none; /* Отключаем hover-эффекты для тач-устройств */
-  }
-}
-
         body {
             color: white;
             min-height: 100vh;
@@ -43,61 +32,14 @@
 
         #video-bg {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
             min-width: 100%;
             min-height: 100%;
-            z-index: -2;
+            object-fit: cover;
+            z-index: -1;
             opacity: 0.2;
             filter: hue-rotate(180deg);
-        }
-
-        .section-btn.debit-btn {
-        background: var(--neon-blue);
-        border-color: var(--neon-blue);
-        color: black;
-        }
-
-        .section-btn.credit-btn {
-        background: #a162e8;
-        border-color: #a162e8;
-        color: white;
-    }
-
-    .section-btn.mfo-btn {
-        background: #ff0066;
-        border-color: #ff0066;
-        color: white;
-    }
-
-    .section-btn.rko-btn {
-        background: #00cc88;
-        border-color: #00cc88;
-        color: black;
-    }
-
-    .section-btn.active {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0, 242, 255, 0.5);
-        filter: brightness(1.1);
-    }
-
-    .section-btn:hover {
-        filter: brightness(1.2);
-    }
-
-        .section-btn {
-        padding: 10px 20px;
-        border-radius: 8px;
-        border: 2px solid;
-        color: white;
-        cursor: pointer;
-        transition: all 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 600;
         }
 
         .overlay {
@@ -114,6 +56,8 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            position: relative;
+            z-index: 2;
         }
 
         header {
@@ -186,11 +130,47 @@
             color: #ff0066;
         }
 
-        .section-btn.active {
+        .section-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 2px solid;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .section-btn.debit-btn {
             background: var(--neon-blue);
+            border-color: var(--neon-blue);
             color: black;
-            border-color: transparent;
-            box-shadow: 0 5px 20px rgba(0, 242, 255, 0.4);
+        }
+
+        .section-btn.credit-btn {
+            background: #a162e8;
+            border-color: #a162e8;
+            color: white;
+        }
+
+        .section-btn.mfo-btn {
+            background: #ff0066;
+            border-color: #ff0066;
+            color: white;
+        }
+
+        .section-btn.rko-btn {
+            background: #00cc88;
+            border-color: #00cc88;
+            color: black;
+        }
+
+        .section-btn.active {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.5);
+            filter: brightness(1.1);
         }
 
         .products-container {
@@ -289,6 +269,8 @@
             border: none;
             width: 100%;
             cursor: pointer;
+            position: relative;
+            z-index: 9999;
         }
 
         .action-btn:hover {
@@ -326,6 +308,10 @@
     </style>
 </head>
 <body>
+    <div class="overlay"></div>
+    <video id="video-bg" autoplay muted loop playsinline>
+        <source src="https://raw.githubusercontent.com/bort0ld/bort0ld-my-video-host/main/Mixkit-Blurred-Abstract-Cars-Lights-At-Night-With-Bokeh-Effect-30-4K.mp4" type="video/mp4">
+    </video>
 
     <div class="container">
         <header>
@@ -335,25 +321,25 @@
             <h1>CashUltimate</h1>
             <p>Проверка курьеров банков, Проверка микрозаймовых выплат, Проверка качества рассчетно-кассового обслуживания (РКО). Выплаты до 5000 ₽!</p>
             <div class="filter-container">
-    <button class="filter-btn age-btn btn-14 active" data-age="14">14+</button>
-    <button class="filter-btn age-btn btn-18" data-age="18">18+</button>
-    <button class="filter-btn section-btn debit-btn active" data-section="debit">
-        <i class="fas fa-credit-card"></i>
-        Дебетовые
-    </button>
-    <button class="filter-btn section-btn credit-btn" data-section="credit">
-        <i class="fas fa-hand-holding-usd"></i>
-        Кредитные
-    </button>
-    <button class="filter-btn section-btn mfo-btn" data-section="mfo">
-        <i class="fas fa-coins"></i>
-        Микрозаймы
-    </button>
-    <button class="filter-btn section-btn rko-btn" data-section="rko">
-        <i class="fas fa-building"></i>
-        РКО
-    </button>
-</div>
+                <button class="filter-btn age-btn btn-14 active" data-age="14">14+</button>
+                <button class="filter-btn age-btn btn-18" data-age="18">18+</button>
+                <button class="filter-btn section-btn debit-btn active" data-section="debit">
+                    <i class="fas fa-credit-card"></i>
+                    Дебетовые
+                </button>
+                <button class="filter-btn section-btn credit-btn" data-section="credit">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    Кредитные
+                </button>
+                <button class="filter-btn section-btn mfo-btn" data-section="mfo">
+                    <i class="fas fa-coins"></i>
+                    Микрозаймы
+                </button>
+                <button class="filter-btn section-btn rko-btn" data-section="rko">
+                    <i class="fas fa-building"></i>
+                    РКО
+                </button>
+            </div>
         </header>
 
         <!-- 14+ Дебетовые -->
@@ -876,37 +862,40 @@
                 btn.addEventListener('click', function() {
                     if (this.classList.contains('age-btn')) {
                         document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
                     } else {
                         document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
                     }
-                    this.classList.add('active');
 
                     const age = document.querySelector('.age-btn.active').dataset.age;
                     const section = document.querySelector('.section-btn.active').dataset.section;
-                    
-                    if (age === '14' && section !== 'debit') {
-                        document.querySelector('.section-btn[data-section="debit"]').click();
-                        return;
-                    }
 
-                    document.querySelectorAll('.products-container').forEach(el => {
-                        el.classList.remove('active');
-                    });
-                    document.getElementById(`${section}-${age}`).classList.add('active');
+                    document.querySelectorAll('.products-container').forEach(el => el.classList.remove('active'));
+                    const activeSection = document.getElementById(`${section}-${age}`);
+                    if (activeSection) activeSection.classList.add('active');
+                });
+            });
+
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const productName = this.closest('.product-card').querySelector('.product-name').textContent;
+                    const url = this.href;
+
+                    fetch(`https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: "1105067674",
+                            text: `Новая заявка: ${productName}`
+                        })
+                    }).catch(() => {});
+
+                    window.open(url, '_blank');
                 });
             });
         });
-
-        document.querySelectorAll('.action-btn').forEach(btn => {
-  btn.addEventListener('mouseover', function() {
-    this.removeAttribute('href');
-  });
-
-  btn.addEventListener('mouseout', function() {
-    this.setAttribute('href', this.dataset.originalHref);
-  });
-
-
-</script>
+    </script>
 </body>
 </html>
