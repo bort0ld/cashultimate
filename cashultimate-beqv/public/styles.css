@@ -27,19 +27,15 @@ a.action-btn::after {
 }
 
 .action-btn {
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.action-btn {
     position: relative;
-    z-index: 1000 !important; /* Перекрывает все элементы */
-    pointer-events: all !important;
+    z-index: 9999 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
 }
 
 .product-card {
     position: relative;
-    z-index: 1001; /* Выше фона */
+    z-index: 1;
 }
 
 /* Отключаем стандартное поведение ссылок */
