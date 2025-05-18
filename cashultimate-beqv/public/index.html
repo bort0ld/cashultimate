@@ -903,24 +903,33 @@
             });
         });
 
-        async function sendToTelegram(product, event) { // Добавляем параметр event
-  event.preventDefault(); // Предотвращаем переход по ссылке до завершения запроса
-  try {
-    await fetch('https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: 1105067674,
-        text: `TEST: ${product}`
-      })
-    });
+        async function sendToTelegram(product, event) {
+    event.preventDefault(); // Блокируем переход сразу
     
-    // После успешной отправки открываем ссылку
-    window.open(event.target.closest('a').href, '_blank'); 
-  } catch (error) {
-    console.error('Ошибка отправки:', error);
-    // Можно добавить fallback-действие
-  }
+    try {
+        // Ваши реальные данные бота
+        const BOT_TOKEN = "7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk";
+        const CHAT_ID = "1105067674";
+
+        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: `Новая заявка: ${product}`
+            })
+        });
+
+        if (!response.ok) throw new Error("Ошибка Telegram API");
+        
+        // Открываем ссылку только после успешной отправки
+        window.open(event.target.closest('a').href, '_blank');
+        
+    } catch (error) {
+        console.error('Ошибка:', error);
+        // Открываем ссылку даже при ошибке
+        window.open(event.target.closest('a').href, '_blank');
+    }
 }
 
         document.querySelectorAll('.action-btn').forEach(btn => {
@@ -934,6 +943,13 @@
 
   // Сохраняем исходный href
   btn.dataset.originalHref = btn.getAttribute('href');
+});
+
+        // Логирование кликов
+document.querySelectorAll('.action-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        console.log('Клик по:', this.dataset.product, 'Ссылка:', this.href);
+    });
 });
 </script>
 </body>
