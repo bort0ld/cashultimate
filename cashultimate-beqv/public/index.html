@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔥 CashUltimate | Сотрудничество с банками</title>
+    <title>🔥 CashUltimate | Премиум сотрудничество</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -60,10 +60,17 @@
             z-index: 2;
         }
 
+        /* Анимация появления */
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateY(50px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
         header {
             text-align: center;
             margin-bottom: 40px;
             padding: 40px 0;
+            animation: slideIn 1s ease-out;
         }
 
         .avatar-container {
@@ -71,6 +78,7 @@
             height: 200px;
             margin: 0 auto 25px;
             perspective: 1000px;
+            position: relative;
         }
 
         .avatar {
@@ -80,20 +88,29 @@
             object-fit: cover;
             border: 3px solid var(--neon-blue);
             box-shadow: 0 0 30px var(--neon-blue);
-            transition: transform 0.5s;
+            transition: all 0.5s;
+            filter: drop-shadow(0 0 10px var(--neon-blue));
         }
 
         .avatar:hover {
-            transform: rotateY(20deg) scale(1.05);
+            transform: rotateY(20deg) scale(1.05) rotateZ(5deg);
+            filter: drop-shadow(0 0 20px var(--neon-purple));
         }
 
         h1 {
-            font-size: 2.8rem;
+            font-size: 3rem;
             margin-bottom: 15px;
             background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 10px rgba(0, 242, 255, 0.3); }
+            100% { text-shadow: 0 0 25px rgba(161, 98, 232, 0.6); }
         }
 
         .filter-container {
@@ -113,6 +130,29 @@
             border: 2px solid;
             background: transparent;
             font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        .filter-btn:hover::before {
+            animation: btnShine 1.5s;
+        }
+
+        @keyframes btnShine {
+            0% { left: -100%; }
+            100% { left: 200%; }
         }
 
         .age-btn.active {
@@ -141,29 +181,28 @@
             align-items: center;
             gap: 8px;
             font-weight: 600;
+            backdrop-filter: blur(5px);
         }
 
         .section-btn.debit-btn {
-            background: var(--neon-blue);
-            border-color: var(--neon-blue);
+            background: linear-gradient(45deg, var(--neon-blue), #00c4ff);
+            border-color: transparent;
             color: black;
         }
 
         .section-btn.credit-btn {
-            background: #a162e8;
-            border-color: #a162e8;
-            color: white;
+            background: linear-gradient(45deg, #a162e8, #7d3cff);
+            border-color: transparent;
         }
 
         .section-btn.mfo-btn {
-            background: #ff0066;
-            border-color: #ff0066;
-            color: white;
+            background: linear-gradient(45deg, #ff0066, #ff0080);
+            border-color: transparent;
         }
 
         .section-btn.rko-btn {
-            background: #00cc88;
-            border-color: #00cc88;
+            background: linear-gradient(45deg, #00cc88, #00ffaa);
+            border-color: transparent;
             color: black;
         }
 
@@ -197,30 +236,43 @@
             backdrop-filter: blur(8px);
             position: relative;
             overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .product-card::before,
+        .product-card::after {
+            content: '';
+            position: absolute;
+            border-radius: inherit;
+            pointer-events: none;
         }
 
         .product-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(0, 242, 255, 0.1), transparent);
-            transform: rotate(45deg);
-            transition: all 0.6s;
+            inset: -1px;
+            background: linear-gradient(45deg, 
+                var(--neon-blue),
+                var(--neon-purple),
+                transparent 60%);
+            z-index: -1;
             opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .product-card::after {
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, 
+                rgba(0, 242, 255, 0.1), 
+                transparent 60%);
         }
 
         .product-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-10px) rotateX(5deg) rotateY(5deg);
             border-color: var(--neon-blue);
-            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 242, 255, 0.2);
         }
 
         .product-card:hover::before {
             opacity: 1;
-            animation: shine 1.5s infinite;
         }
 
         .product-logo {
@@ -232,12 +284,20 @@
             padding: 8px;
             margin-bottom: 20px;
             box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover .product-logo {
+            transform: rotate(15deg) scale(1.1);
         }
 
         .product-name {
             font-size: 1.3rem;
             margin-bottom: 12px;
             font-weight: 700;
+            background: linear-gradient(45deg, #fff, var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .product-payout {
@@ -245,6 +305,7 @@
             font-weight: 800;
             margin-bottom: 15px;
             font-size: 1.2rem;
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
         }
 
         .product-description {
@@ -270,10 +331,28 @@
             width: 100%;
             cursor: pointer;
             position: relative;
-            z-index: 9999;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-            -webkit-user-select: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.3),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
         }
 
         .action-btn:hover {
@@ -281,17 +360,7 @@
             box-shadow: 0 5px 20px rgba(0, 242, 255, 0.4);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes shine {
-            0% { left: -100%; }
-            20% { left: 100%; }
-            100% { left: 100%; }
-        }
-
+        /* Адаптивка */
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.2rem;
@@ -322,7 +391,7 @@
                 <img src="https://2x2.su/upload/iblock/ad4/4z93bfpkkerjxqx7y15pv4y1xkv2hlnc.jpg" alt="CashUltimate" class="avatar">
             </div>
             <h1>CashUltimate</h1>
-            <p>Проверка курьеров банков, Проверка микрозаймовых выплат, Проверка качества рассчетно-кассового обслуживания (РКО). Выплаты до 5000 ₽!</p>
+            <p>Премиум-проверка финансовых услуг с эксклюзивными бонусами</p>
             <div class="filter-container">
                 <button class="filter-btn age-btn btn-14 active" data-age="14">14+</button>
                 <button class="filter-btn age-btn btn-18" data-age="18">18+</button>
@@ -869,80 +938,84 @@
                 video.play();
             });
 
-            // Обработчики фильтров
+            // Обновленный обработчик фильтров
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    if (this.classList.contains('age-btn')) {
+                    const isAgeBtn = this.classList.contains('age-btn');
+                    const age = isAgeBtn ? this.dataset.age : document.querySelector('.age-btn.active').dataset.age;
+                    const section = isAgeBtn ? 
+                        (age === '14' ? 'debit' : document.querySelector('.section-btn.active').dataset.section) 
+                        : this.dataset.section;
+
+                    // Обновление активных кнопок
+                    if(isAgeBtn) {
                         document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
                         this.classList.add('active');
+                        
+                        if(age === '14') {
+                            document.querySelectorAll('.section-btn').forEach(b => {
+                                if(b.dataset.section !== 'debit') {
+                                    b.style.display = 'none';
+                                    b.classList.remove('active');
+                                }
+                            });
+                            document.querySelector('.section-btn[data-section="debit"]').click();
+                        } else {
+                            document.querySelectorAll('.section-btn').forEach(b => b.style.display = 'flex');
+                        }
                     } else {
                         document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
                         this.classList.add('active');
                     }
 
-                    const age = document.querySelector('.age-btn.active').dataset.age;
-                    const section = document.querySelector('.section-btn.active').dataset.section;
-
+                    // Показ/скрытие секций
                     document.querySelectorAll('.products-container').forEach(el => el.classList.remove('active'));
-                    const activeSection = document.getElementById(`${section}-${age}`);
-                    if (activeSection) activeSection.classList.add('active');
+                    
+                    const activeAge = document.querySelector('.age-btn.active').dataset.age;
+                    const activeSection = document.querySelector('.section-btn.active').dataset.section;
+                    
+                    if(activeAge === '14') {
+                        document.getElementById(`debit-14`).classList.add('active');
+                        document.querySelectorAll('.section-btn:not([data-section="debit"])').forEach(b => b.style.opacity = '0.5');
+                    } else {
+                        document.getElementById(`${activeSection}-18`).classList.add('active');
+                        document.querySelectorAll('.section-btn').forEach(b => b.style.opacity = '1');
+                    }
                 });
             });
 
-            // Обработчики для кнопок
+            // Обработчик для кнопок
             document.querySelectorAll('.action-btn').forEach(btn => {
                 let originalHref = btn.href;
                 
-                // Скрываем href при наведении
-                btn.addEventListener('mouseenter', () => {
-                    btn.removeAttribute('href');
-                });
-                
-                // Восстанавливаем href
-                btn.addEventListener('mouseleave', () => {
-                    btn.href = originalHref;
-                });
+                btn.addEventListener('mouseenter', () => btn.removeAttribute('href'));
+                btn.addEventListener('mouseleave', () => btn.href = originalHref);
 
-                // Обработка клика
                 btn.addEventListener('click', function(e) {
                     e.preventDefault();
-                    const productName = this.closest('.product-card').querySelector('.product-name').textContent;
                     
-                    // Анимация нажатия
-                    this.style.transform = 'scale(0.98)';
-                    setTimeout(() => {
-                        this.style.transform = '';
-                    }, 200);
+                    // Анимация
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => this.style.transform = '', 200);
 
                     // Отправка в Telegram
+                    const productName = this.closest('.product-card').querySelector('.product-name').textContent;
                     fetch(`https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             chat_id: "1105067674",
-                            text: `Новая заявка: ${productName}`
+                            text: `🔥 Новая заявка: ${productName}`
                         })
-                    }).catch(() => {});
+                    });
 
                     // Открытие ссылки
                     const newWindow = window.open(originalHref, '_blank');
-                    if (newWindow) newWindow.opener = null;
+                    newWindow.opener = null;
                 });
 
                 // Блокировка контекстного меню
-                btn.addEventListener('contextmenu', (e) => {
-                    e.preventDefault();
-                    return false;
-                });
-
-                // Для мобильных устройств
-                btn.addEventListener('touchstart', () => {
-                    btn.removeAttribute('href');
-                }, { passive: true });
-
-                btn.addEventListener('touchend', () => {
-                    btn.href = originalHref;
-                }, { passive: true });
+                btn.addEventListener('contextmenu', (e) => e.preventDefault());
             });
         });
     </script>
