@@ -14,6 +14,18 @@ a.action-btn::after {
   box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
+#video-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1; /* Должен быть ниже основного контента */
+    opacity: 0.2;
+    filter: hue-rotate(180deg);
+}
+
 /* Отключаем стандартное поведение ссылок */
 a.action-btn:hover::after,
 a.action-btn:focus::after {
