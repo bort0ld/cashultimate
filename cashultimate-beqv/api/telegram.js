@@ -1,32 +1,49 @@
-export default async (req, res) => {
-  // Разрешаем CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
-  if (req.method === 'OPTIONS') return res.status(200).end();
+<script>
+    // Удалить ВСЕ предыдущие скрипты и вставить этот
+    document.addEventListener('DOMContentLoaded', () => {
+        // Инициализация фильтров
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Логика фильтрации
+                if (this.classList.contains('age-btn')) {
+                    document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
+                } else {
+                    document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
+                }
+                this.classList.add('active');
 
-  try {
-    const { product } = JSON.parse(req.body);
-    console.log('Продукт:', product);
+                const age = document.querySelector('.age-btn.active')?.dataset.age || '18';
+                const section = document.querySelector('.section-btn.active')?.dataset.section || 'debit';
 
-    const response = await fetch(`https://api.telegram.org/bot${process.env.TG_TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: process.env.TG_CHAT_ID,
-        text: `🆕 Новый клик: ${product}\nВремя: ${new Date().toLocaleString()}`
-      })
+                document.querySelectorAll('.products-container').forEach(el => {
+                    el.classList.remove('active');
+                });
+                
+                const activeContainer = document.getElementById(`${section}-${age}`);
+                if (activeContainer) activeContainer.classList.add('active');
+            });
+        });
+
+        // Обработчик для кнопок
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const product = this.dataset.product || 'Unknown';
+                const url = this.href;
+
+                // Отправка в Telegram
+                fetch(`https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: "1105067674",
+                        text: `Новая заявка: ${product}`
+                    })
+                }).catch(() => {});
+
+                // Открытие ссылки
+                window.open(url, '_blank');
+            });
+        });
     });
-
-    const data = await response.json();
-    console.log('Ответ Telegram:', data);
-
-    if (!response.ok) throw new Error(data.description || 'Ошибка API Telegram');
-    
-    res.status(200).json({ success: true });
-  } catch (error) {
-    console.error('Ошибка:', error);
-    res.status(500).json({ error: error.message });
-  }
-};
+</script>
