@@ -903,30 +903,26 @@
             });
         });
 
-        async function sendToTelegram(product, event) {
-        try {
-            const BOT_TOKEN = "7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk";
-            const CHAT_ID = "1105067674";
-
-            // Отправляем запрос НЕ блокируя интерфейс
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: `Заявка: ${product}`
-                })
-            });
-
-            // Открываем ссылку сразу
-            const link = event.currentTarget.href;
-            window.open(link, '_blank');
-            
-        } catch (error) {
-            console.error('Ошибка:', error);
-            window.open(event.currentTarget.href, '_blank');
-        }
-    }
+        function sendToTelegram(product, event) {
+    const BOT_TOKEN = "7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk";
+    const CHAT_ID = "1105067674";
+    
+    // Открываем ссылку сразу
+    const link = event.currentTarget.href;
+    window.open(link, '_blank');
+    
+    // Отправка в Telegram (не блокирующая)
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: `Заявка: ${product}`
+        })
+    }).catch(() => {});
+    
+    return false;
+}
 
         document.querySelectorAll('.action-btn').forEach(btn => {
   btn.addEventListener('mouseover', function() {
