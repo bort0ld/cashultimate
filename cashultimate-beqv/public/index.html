@@ -920,6 +920,19 @@
     // Можно добавить fallback-действие
   }
 }
+
+        document.querySelectorAll('.action-btn').forEach(btn => {
+  btn.addEventListener('mouseover', function() {
+    this.removeAttribute('href');
+  });
+
+  btn.addEventListener('mouseout', function() {
+    this.setAttribute('href', this.dataset.originalHref);
+  });
+
+  // Сохраняем исходный href
+  btn.dataset.originalHref = btn.getAttribute('href');
+});
 </script>
 </body>
 </html>
