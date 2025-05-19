@@ -484,7 +484,7 @@
                 </button>
                 <button class="filter-btn section-btn credit-btn" data-section="credit">
                     <i class="fas fa-hand-holding-usd"></i>
-                    Кредитные
+                    Кредитные карты
                 </button>
                 <button class="filter-btn section-btn mfo-btn" data-section="mfo">
                     <i class="fas fa-coins"></i>
@@ -502,6 +502,17 @@
         </header>
 
         <!-- 14+ Дебетовые -->
+        <div id="debit-14" class="products-container active">
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="https://my-cache.s3-cdn.com/offers/thumbs/3/102931.png" class="product-logo">
+                    <h3 class="product-name">Т-Банк</h3>
+                    <div class="product-payout">500 ₽</div>
+                    <p class="product-description">Карта с кешбеком</p>
+                    <a href="https://clck.ru/3M8hfU" class="action-btn" target="_blank" onclick="sendToTelegram('Т-Банк')">
+                        Оформить <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
 
                 <div class="product-card">
                     <img src="https://www.vtb.ru/media-files/vtb.ru/shared/images/icon/favicon_512x512px.webp" class="product-logo">
@@ -1007,61 +1018,127 @@
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const video = document.getElementById('video-bg');
-        video.play().catch(() => {
-            video.muted = true;
-            video.play();
-        });
-
-        let currentSection = 'debit';
-        let currentAge = '14';
-        let searchQuery = '';
-
-        // Инициализация при загрузке
-        function init() {
-            document.querySelector('.age-btn.active').click();
-            updateProductsDisplay();
-        }
-
-        // Обновление отображения продуктов
-        function updateProductsDisplay() {
-            const allProducts = document.querySelectorAll('.product-card');
-            const activeContainers = currentSection === 'all' 
-                ? document.querySelectorAll('.products-container') 
-                : [document.getElementById(`${currentSection}-${currentAge}`)];
-
-            let hasVisibleItems = false;
-
-            allProducts.forEach(card => {
-                const container = card.closest('.products-container');
-                const isVisibleContainer = Array.from(activeContainers).includes(container);
-                const matchesSearch = card.querySelector('.product-name').textContent
-                    .toLowerCase().includes(searchQuery.toLowerCase());
-
-                if (isVisibleContainer && matchesSearch) {
-                    card.style.display = 'block';
-                    container.classList.add('active');
-                    hasVisibleItems = true;
-                } else {
-                    card.style.display = 'none';
-                    if (currentSection !== 'all') container.classList.remove('active');
-                }
-
-                container.style.display = isVisibleContainer ? 'block' : 'none';
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('video-bg');
+            video.play().catch(() => {
+                video.muted = true;
+                video.play();
             });
 
-            document.querySelector('.no-results').style.display = 
-                hasVisibleItems ? 'none' : 'block';
-        }
+            // Обработчики для возрастных кнопок
+            document.querySelectorAll('.age-btn').forEach(b => {
+                b.addEventListener('click', function() {
+                    const age = this.dataset.age;
+                    document.querySelectorAll('.age-btn').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
 
-        // Обработчик поиска
+                    if(age === '14') {
+                        document.querySelectorAll('.section-btn').forEach(btn => {
+                            if(btn.dataset.section !== 'debit') {
+                                btn.style.display = 'none';
+                                btn.classList.remove('active');
+                            }
+                        });
+                        document.querySelector('.section-btn[data-section="debit"]').click();
+                    } else {
+                        document.querySelectorAll('.section-btn').forEach(btn => {
+                            btn.style.display = 'flex';
+                            btn.style.opacity = '1';
+                        });
+                    }
+
+                    const activeSection = age === '14' ? 'debit' : 
+                        document.querySelector('.section-btn.active')?.dataset.section || 'debit';
+                    
+                    document.querySelectorAll('.products-container').forEach(el => el.classList.remove('active'));
+                    
+                    if(age === '14') {
+                        document.getElementById('debit-14').classList.add('active');
+                        document.querySelectorAll('.section-btn:not([data-section="debit"])').forEach(btn => {
+                            btn.style.opacity = '0.5';
+                        });
+                    } else {
+                        document.getElementById(`${activeSection}-18`).classList.add('active');
+                        document.querySelectorAll('.section-btn').forEach(btn => {
+                            btn.style.opacity = '1';
+                        });
+                    }
+                });
+            });
+
+            // Обработчики для кнопок секций
+            document.querySelectorAll('.section-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const age = document.querySelector('.age-btn.active').dataset.age;
+                    const section = this.dataset.section;
+                    
+                    document.querySelectorAll('.products-container').forEach(el => el.classList.remove('active'));
+                    document.getElementById(`${section}-${age}`).classList.add('active');
+                });
+            });
+
+            // Обработчики для кнопок продуктов
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                let originalHref = btn.href;
+                
+                btn.addEventListener('mouseenter', () => btn.removeAttribute('href'));
+                btn.addEventListener('mouseleave', () => btn.href = originalHref);
+                
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Анимация
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => this.style.transform = '', 200);
+                    
+                    // Отправка в Telegram
+                    const productName = this.closest('.product-card').querySelector('.product-name').textContent;
+                    fetch(`https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: "1105067674",
+                            text: `🔥 Новая заявка: ${productName}`
+                        })
+                    });
+                    
+                    // Открытие ссылки
+                    const newWindow = window.open(originalHref, '_blank');
+                    if(newWindow) newWindow.opener = null;
+                });
+                
+                // Блокировка контекстного меню
+                btn.addEventListener('contextmenu', (e) => e.preventDefault());
+                
+                // Обработка касаний для мобильных
+                btn.addEventListener('touchstart', () => btn.removeAttribute('href'), { passive: true });
+                btn.addEventListener('touchend', () => btn.href = originalHref, { passive: true });
+            });
+
+            // Инициализация
+            document.querySelector('.age-btn.active').click();
+        });
         const searchProducts = debounce((searchText) => {
-            searchQuery = searchText;
             document.querySelector('.loader').style.display = 'block';
             
             setTimeout(() => {
-                updateProductsDisplay();
+                const activeContainer = document.querySelector('.products-container.active');
+                const cards = activeContainer.querySelectorAll('.product-card');
+                let found = false;
+
+                cards.forEach(card => {
+                    const name = card.querySelector('.product-name').textContent.toLowerCase();
+                    if(name.includes(searchText.toLowerCase())) {
+                        card.style.display = 'block';
+                        found = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                document.querySelector('.no-results').style.display = found ? 'none' : 'block';
                 document.querySelector('.loader').style.display = 'none';
             }, 300);
         }, 300);
@@ -1070,44 +1147,7 @@
             searchProducts(e.target.value);
         });
 
-        // Обработчики кнопок
-        document.querySelectorAll('.age-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                currentAge = this.dataset.age;
-                document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                
-                if (currentAge === '14') {
-                    document.querySelectorAll('.section-btn').forEach(btn => {
-                        if(btn.dataset.section !== 'debit') {
-                            btn.style.display = 'none';
-                            btn.classList.remove('active');
-                        }
-                    });
-                    currentSection = 'debit';
-                    document.querySelector('.section-btn[data-section="debit"]').click();
-                } else {
-                    document.querySelectorAll('.section-btn').forEach(btn => {
-                        btn.style.display = 'flex';
-                        btn.style.opacity = '1';
-                    });
-                }
-                
-                updateProductsDisplay();
-            });
-        });
-
-        document.querySelectorAll('.section-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                currentSection = this.dataset.section;
-                document.querySelectorAll('.section-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                updateProductsDisplay();
-            });
-        });
-
-        // Дебаунс для поиска
-        function debounce(func, timeout = 300) {
+        function debounce(func, timeout = 300){
             let timer;
             return (...args) => {
                 clearTimeout(timer);
@@ -1115,59 +1155,26 @@
             };
         }
 
-        // Обработчики кнопок продуктов
-        document.querySelectorAll('.action-btn').forEach(btn => {
-            let originalHref = btn.href;
-            
-            // Ховер-эффекты
-            btn.addEventListener('mouseenter', () => btn.removeAttribute('href'));
-            btn.addEventListener('mouseleave', () => btn.href = originalHref);
-            
-            // Клик
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Анимация
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => this.style.transform = '', 200);
-                
-                // Отправка в Telegram
-                const productName = this.closest('.product-card').querySelector('.product-name').textContent;
-                fetch(`https://api.telegram.org/bot7450440430:AAF2YaabBn8HXVCNhfNxP3d0zxkEVDVRmNk/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: "1105067674",
-                        text: `🔥 Новая заявка: ${productName}`
-                    })
-                });
-                
-                // Открытие ссылки
-                const newWindow = window.open(originalHref, '_blank');
-                if(newWindow) newWindow.opener = null;
+        // Дополнительные улучшения
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'rotateZ(1deg) scale(1.02)';
             });
             
-            // Контекстное меню
-            btn.addEventListener('contextmenu', (e) => e.preventDefault());
-            
-            // Мобильные касания
-            btn.addEventListener('touchstart', () => btn.removeAttribute('href'), { passive: true });
-            btn.addEventListener('touchend', () => btn.href = originalHref, { passive: true });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'rotateZ(0deg) scale(1)';
+            });
         });
-
-        // Запуск инициализации
-        init();
 
         // Плавный скролл
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
                 });
             });
         });
-    });
-</script>
+    </script>
 </body>
 </html>
