@@ -1,0 +1,57 @@
+/* Скрываем URL при наведении */
+a.action-btn {
+  position: relative;
+  text-decoration: none !important;
+}
+
+a.action-btn::after {
+  content: "";
+  position: absolute;
+  display: none;
+  background: #fff;
+  padding: 5px;
+  border-radius: 3px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+#video-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1; /* Должен быть ниже основного контента */
+    opacity: 0.2;
+    filter: hue-rotate(180deg);
+}
+
+.action-btn {
+    position: relative;
+    z-index: 9999;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    text-decoration: none !important;
+}
+
+.product-card {
+    position: relative;
+    z-index: 1;
+}
+
+#video-bg {
+    z-index: -1 !important;
+}
+
+/* Отключаем стандартное поведение ссылок */
+a.action-btn:hover::after,
+a.action-btn:focus::after {
+  display: none !important;
+}
+
+/* Для мобильных устройств */
+@media (hover: none) {
+  a.action-btn {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
